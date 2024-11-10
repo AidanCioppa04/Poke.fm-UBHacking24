@@ -40,6 +40,9 @@ async function getArtistTags(query){
 }
 async function userPokemon() {
     userPokemonSearch = document.getElementById('pokemonSearchInput').value
+    if(!userPokemonSearch)
+        return error("You must search for a pokemon")
+    userPokemonSearh = userPokemonSearch.toLowerCase()
     favoritePokemon = await searchPokemon(userPokemonSearch)
 }
 //returns pokemon object
@@ -49,7 +52,7 @@ async function searchPokemon(query) {
         const SearchResults = await SearchRequest.json()
         return SearchResults
     }catch(error){
-        console.log(`Could not find results for your query: '${query}'`)
+        console.log(`Could not find results for your query: '${query}'. Check for spelling errors`)
         return undefined
     }
 }
@@ -83,9 +86,21 @@ async function pullType(query){
     try{
         const SearchRequest = await fetch(`https://pokeapi.co/api/v2/type/${query}`)
         const SearchResults = await SearchRequest.json()
-        let random= Math.floor(Math.random()*2000)%SearchResults.pokemon.length
+        let random
+        let hasSprite
+        let pokemonObj
+        while(!hasSprite||!pokemonObj){
+        if(pokemonObj){
+            print(pokemonObj.name)
+        }
+        random= Math.floor(Math.random()*2000)%SearchResults.pokemon.length
         pokemon=SearchResults.pokemon[random].pokemon.name
-        return searchPokemon(pokemon)
+        pokemonObj = await searchPokemon(pokemon)
+        if(pokemonObj&&pokemonObj.sprites["front_default"]){
+            hasSprite=true
+        }
+    }   
+        return pokemonObj
     }catch(error){
         console.log(error)
     }
@@ -95,8 +110,20 @@ async function pullColor(query){
     try{
         const SearchRequest = await fetch(`https://pokeapi.co/api/v2/pokemon-color/${query}`)
         const SearchResults = await SearchRequest.json()
-        let random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
+        let random
+        let hasSprite
+        let pokemonObj
+        while(!hasSprite||!pokemonObj){
+            if(pokemonObj){
+                print(pokemonObj.name)
+            }
+        random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
         pokemon=SearchResults.pokemon_species[random].name
+        pokemonObj = await searchPokemon(pokemon)
+        if(pokemonObj&&pokemonObj.sprites["front_default"]){
+            hasSprite=true
+        }
+    }
         return searchPokemon(pokemon)
     }catch(error){
         console.log(error)
@@ -107,8 +134,20 @@ async function pullGeneration(query) {
     try{
         const SearchRequest = await fetch(`https://pokeapi.co/api/v2/generation/${query}`)
         const SearchResults = await SearchRequest.json()
-        let random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
+        let random
+        let hasSprite
+        let pokemonObj
+        while(!hasSprite||!pokemonObj){
+            if(pokemonObj){
+                print(pokemonObj.name)
+            }
+        random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
         pokemon=SearchResults.pokemon_species[random].name
+        pokemonObj = await searchPokemon(pokemon)
+        if(pokemonObj&&pokemonObj.sprites["front_default"]){
+            hasSprite=true
+        }
+    }
         return searchPokemon(pokemon)
     }catch(error){
         console.log(error)
@@ -172,9 +211,7 @@ async function generateReccomendations(){
         return error("must pick a berry")
     } 
     berrySprite=await pullBerrySprite(berry)
-    print(berrySprite)
     favoritePokemonSprite=favoritePokemon.sprites.front_default
-    print(favoritePokemonSprite)
     color = document.getElementById("color").value
     type = document.getElementById("type").value  
     generation = document.getElementById("generation").value
@@ -249,12 +286,12 @@ function displayResults(results) {
             container.style.display = 'none'
             continue
         }
-
+            let sprite="front_default"
         if(Math.floor(Math.random()*4096) == 1) {
-            re
+            sprite="front_shiny"
         }
 
-        container.querySelector('img').src=results[i].pokemon.sprites["front_default"]
+        container.querySelector('img').src=results[i].pokemon.sprites[sprite]
         container.querySelector('span.pokemonName').innerHTML=results[i].pokemon.name
         container.querySelector('a.artistName').innerHTML=results[i].artist.name
         container.querySelector('a.artistName').href=results[i].artist.url

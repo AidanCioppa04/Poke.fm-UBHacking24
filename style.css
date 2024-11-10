@@ -99,3 +99,13 @@ select{
     text-align: center;
     margin: 0;
 }
+
+.rockingAnimation{
+    transform:rotate(-10deg);
+    animation: rockingAnimation 0.25s infinite linear alternate
+}
+@keyframes rockingAnimation{
+    to{
+        transform:rotate(10deg)
+    }
+}
