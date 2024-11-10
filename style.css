@@ -78,3 +78,24 @@ select{
     font-weight:bold;
     font-style:italic;
 }
+
+#reccomendationDisplay{
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.reccomendationContainer{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin:0.5em
+}
+.reccomendationContainer img{
+    width: 15vw;
+    height: 15vw;
+}
+.reccomendationContainer p{
+    text-align: center;
+    margin: 0;
+}

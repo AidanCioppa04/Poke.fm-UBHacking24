@@ -157,13 +157,12 @@ function generateIndex(first,second) {
 
 async function generateReccomendations(){
 
-    userSimilarArtists.length == 0 && await findSimilarArtist()
-
+    await findSimilarArtist()
     if(userSimilarArtists.length == 0) {
         return error("no valid artist")
     }
 
-    favoritePokemon || await userPokemon() 
+    await userPokemon() 
     if(!favoritePokemon) {
         return error("no valid pokemon selected")
     }
@@ -244,7 +243,23 @@ async function generateReccomendations(){
 // {artist:artistName, pokemon:pokemonName}
 // results[0] is the primary reccomendation
 function displayResults(results) {
-    print(results)
+    for(i=0;i<4;i++) {
+        let container = document.getElementById('rec'+i)
+        if(!results[i]){
+            container.style.display = 'none'
+            continue
+        }
+
+        if(Math.floor(Math.random()*4096) == 1) {
+            re
+        }
+
+        container.querySelector('img').src=results[i].pokemon.sprites["front_default"]
+        container.querySelector('span.pokemonName').innerHTML=results[i].pokemon.name
+        container.querySelector('a.artistName').innerHTML=results[i].artist.name
+        container.querySelector('a.artistName').href=results[i].artist.url
+        container.style.display = "flex"
+    }
 }
 
 function error(message){
