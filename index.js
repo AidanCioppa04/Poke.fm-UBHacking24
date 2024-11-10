@@ -29,10 +29,10 @@ async function getArtistTags(query){
     try{
         const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getTopTags&artist=${query}&api_key=${key}&format=json`)
         const SearchResults = await SearchRequest.json()
-        const topTags = SearchResults.topTags
+        const topTags = SearchResults.toptags.tag
         let tags = []
         for(i=0;i<5;i++){
-            tags.push(topTags.tag[i].name)
+            tags.push(topTags[i].name)
         }
         console.log(tags)
         return tags
@@ -104,7 +104,14 @@ async function pullBerry(query) {
 
 function checkBerryChoice(pokemonID,berryID){
     index=(pokemonID+berryID)%100
-    print(index)
+    pokemonID=pokemonID%100
+    evaluation =[]
+    if(pokemonID<15){evaluation[0]="great"}
+    else if(pokemonID<30){evaluation[0]="average"}
+    else if(pokemonID<45){evaluation[0]="poor"}
+    else if(pokemonID<67){evaluation[0]="hit or miss"}
+
+    if(indexed)
 }
 
 //takes two object ids, returns index [0-99]
