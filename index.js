@@ -1,6 +1,15 @@
 const key="0d233a8d757fa7ab78f3a5605a7567af"
-let userPokemon1
+let favoritePokemon
 let userSimilarArtists = []
+
+function print(x) {
+    console.log(x)
+}
+
+window.onload = () => {
+    let ifIHaveToWriteDocumentDotGetElementByIdOneMoreTimeIWillExplode = document.getElementById('errorMessageContainer')
+    ifIHaveToWriteDocumentDotGetElementByIdOneMoreTimeIWillExplode.onclick = () => {ifIHaveToWriteDocumentDotGetElementByIdOneMoreTimeIWillExplode.style.display = 'none'}
+}
 
 //returns map of 100 similar artists {name, mbid}
 async function findSimilarArtist(){
@@ -10,7 +19,6 @@ async function findSimilarArtist(){
         const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=${query}&autocorrect=1&api_key=${key}&format=json`)
         const SearchResults = await SearchRequest.json()
         userSimilarArtists = SearchResults.similarartists.artist
-        console.log(userSimilarArtists)
     }catch(error){
         userSimilarArtists = []
         console.log(error)
@@ -19,15 +27,20 @@ async function findSimilarArtist(){
 
 async function getArtistTags(query){
     try{
-        const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getTags&artist=${query}&api_key=${key}&format=json`)
+        const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getTopTags&artist=${query}&api_key=${key}&format=json`)
         const SearchResults = await SearchRequest.json()
-        let tags=SearchResults
+        const topTags = SearchResults.topTags
+        let tags = []
+        for(i=0;i<5;i++){
+            tags.push(topTags.tag[i].name)
+        }
+        console.log(tags)
+        return tags
     }catch(error){console.log(error)}
 }
 async function userPokemon() {
     userPokemonSearch = document.getElementById('pokemonSearchInput').value
-    userPokemon1 = await searchPokemon(userPokemonSearch)
-    console.log(userPokemon1)
+    favoritePokemon = await searchPokemon(userPokemonSearch)
 }
 //returns pokemon object
 async function searchPokemon(query) {
@@ -89,22 +102,27 @@ async function pullBerry(query) {
     }
 }
 
+function checkBerryChoice(pokemonID,berryID){
+    index=(pokemonID+berryID)%100
+    print(index)
+}
+
 //takes two object ids, returns index [0-99]
 function generateIndex(first,second) {
-    index=(first+second)%99
+    index=(first+second)%100
     return index
 }
 
 async function generateReccomendations(){
 
-    userSimilarArtists = userSimilarArtists.length == 0 ? findSimilarArtist() : userSimilarArtists
+    userSimilarArtists.length == 0 && await findSimilarArtist()
 
     if(userSimilarArtists.length == 0) {
         return error("no valid artist")
     }
 
-    userPokemon1 ??= userPokemon() 
-    if(!userPokemon1) {
+    favoritePokemon || await userPokemon() 
+    if(!favoritePokemon) {
         return error("no valid pokemon selected")
     }
     
@@ -112,38 +130,31 @@ async function generateReccomendations(){
     if(!berry){
         return error("must pick a berry")
     } 
+    color = document.getElementById("color").value
+    type = document.getElementById("type").value  
+    generation = document.getElementById("generation").value
+     
+    print(favoritePokemon.id)
+    print(favoritePokemon.name)
     berry = berry.slice(0,berry.indexOf('-'))
     berry = await pullBerry(berry)
-    index = generateIndex(userPokemon1.id,berry.id)
+    print(berry.name)
+    index = generateIndex(favoritePokemon.id,berry.id)
+    print(index)
     
     const primaryReccomendation = userSimilarArtists[index]
     console.log(primaryReccomendation.name)
 
-    let tags = await getArtistTags(primaryReccomendation.name)
-    console.log(tags)
+    let primaryTags = await getArtistTags(primaryReccomendation.name)
+     
 
 }
 
 function error(message){
-    console.log(message)
-}
+    let errorMessageContainer = document.getElementById('errorMessageContainer')
+    let errorMessageElement = document.getElementById('errorMessage')
 
-async function main() {
-    /*let obj= await findSimilarArtist("waterparks")
-    let berry=await pullBerry("44")
-    console.log(berry.name)
-    let typeMon=await pullType("fire")
-    console.log(typeMon.name)
-    let genMon=await pullGeneration("8")
-    console.log(genMon.name)
-    let userMon=await userPokemon("chespin")
-    console.log(userMon.name)
-    
-    
-    let index=generateIndex(berry.id,userMon.id)
-    console.log(index)
-    console.log(obj[index].name)
-    */
-
+    errorMessageElement.innerHTML = message
+    errorMessageContainer.style.display = 'block'
+    console.log("Error: "+message)
 }
-main() 

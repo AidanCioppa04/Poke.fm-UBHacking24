@@ -11,6 +11,7 @@
     <h1>Poke.FM</h1>
     <main class="flex column">
         <section id="controlPanel">
+        <div id="errorMessageContainer"><span id="errorMessage"></span>&nbsp;[click to dismiss]</div>
             <section id="inputsContainer" class="flex column">
                 <div class="flex row spaceEven">
                     <div class="flex column">
@@ -103,7 +104,7 @@
                     <p>[Optional] Choose your favorites below for additional suggestions:</p>
                     <span>
                         Color:
-                        <select name="color">
+                        <select id="color" name="color">
                             <option value="">No Selection</option>
                             <option value="black">Black</option>
                             <option value="blue">Blue</option>
@@ -119,7 +120,7 @@
                     </span>
                     <span>
                         Type:
-                        <select name="type">
+                        <select id="type" name="type">
                             <option value="">No Selection</option>
                             <option value="normal">normal</option>
                             <option value="fighting">fighting</option>
@@ -147,7 +148,7 @@
                     
                     <span>
                         Generation:
-                        <select name="generation">
+                        <select id="generation" name="generation">
                             <option value="">No Selection</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
