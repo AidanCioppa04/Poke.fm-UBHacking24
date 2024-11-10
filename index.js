@@ -1,6 +1,7 @@
 const key="0d233a8d757fa7ab78f3a5605a7567af"
 let favoritePokemon
 let userSimilarArtists = []
+let berrySprite
 
 function print(x) {
     console.log(x)
@@ -31,10 +32,9 @@ async function getArtistTags(query){
         const SearchResults = await SearchRequest.json()
         const topTags = SearchResults.toptags.tag
         let tags = []
-        for(i=0;i<5;i++){
+        for(i=0;i<5&&topTags[i];i++){
             tags.push(topTags[i].name)
         }
-        console.log(tags)
         return tags
     }catch(error){console.log(error)}
 }
@@ -52,8 +52,8 @@ async function searchPokemon(query) {
         console.log(`Could not find results for your query: '${query}'`)
         return undefined
     }
-    
 }
+
 //takes list of pokemon, returns one pokemon object from list
 async function randomPokemonFromList(query){
     try{
@@ -63,8 +63,20 @@ async function randomPokemonFromList(query){
         return searchPokemon(query)
     }catch(error){
     console.log(error)
+    }
 }
+/*
+async function pullPokemonSprite(query){
+    try{
+        const SearchRequest = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`)
+        const SearchResults = await SearchRequest.json()
+        return SearchResults.sprites.front_default
+    }catch(error){
+        console.log(`Could not find results for your query: '${query}'`)
+        return undefined
+    }
 }
+    */
 
 //returns random pokemon object of a type
 async function pullType(query){
@@ -78,7 +90,18 @@ async function pullType(query){
         console.log(error)
     }
 }
-
+//returns random pokemon object of a color
+async function pullColor(query){
+    try{
+        const SearchRequest = await fetch(`https://pokeapi.co/api/v2/pokemon-color/${query}`)
+        const SearchResults = await SearchRequest.json()
+        let random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
+        pokemon=SearchResults.pokemon_species[random].name
+        return searchPokemon(pokemon)
+    }catch(error){
+        console.log(error)
+    }
+}
 //returns list of pokemon from a generation
 async function pullGeneration(query) {
     try{
@@ -102,16 +125,28 @@ async function pullBerry(query) {
     }
 }
 
+async function pullBerrySprite(query){
+    try{
+        const SearchRequest = await fetch(`https://pokeapi.co/api/v2/item/${query}`)
+        const SearchResults = await SearchRequest.json()
+        return SearchResults.sprites.default
+    }catch(error){
+        console.log(error)
+    }
+}
 function checkBerryChoice(pokemonID,berryID){
     index=(pokemonID+berryID)%100
     pokemonID=pokemonID%100
     evaluation =[]
-    if(pokemonID<15){evaluation[0]="great"}
+    if(pokemonID<15)     {evaluation[0]="great"}
     else if(pokemonID<30){evaluation[0]="average"}
     else if(pokemonID<45){evaluation[0]="poor"}
-    else if(pokemonID<67){evaluation[0]="hit or miss"}
+    else                 {evaluation[0]="hit or miss"}
 
-    if(indexed)
+    if(index<33)         {evaluation[1]="great"}
+    else if(index<66)    {evaluation[1]="alright"}
+    else                 {evaluation[1]="poor"}
+    return evaluation
 }
 
 //takes two object ids, returns index [0-99]
@@ -137,24 +172,76 @@ async function generateReccomendations(){
     if(!berry){
         return error("must pick a berry")
     } 
+    berrySprite=await pullBerrySprite(berry)
+    print(berrySprite)
+    favoritePokemonSprite=favoritePokemon.sprites.front_default
+    print(favoritePokemonSprite)
     color = document.getElementById("color").value
     type = document.getElementById("type").value  
     generation = document.getElementById("generation").value
      
-    print(favoritePokemon.id)
-    print(favoritePokemon.name)
+
     berry = berry.slice(0,berry.indexOf('-'))
     berry = await pullBerry(berry)
-    print(berry.name)
     index = generateIndex(favoritePokemon.id,berry.id)
-    print(index)
     
     const primaryReccomendation = userSimilarArtists[index]
-    console.log(primaryReccomendation.name)
 
     let primaryTags = await getArtistTags(primaryReccomendation.name)
-     
+    
+    let typeRecPoke
+    let typeRec
+    if(type !== ''){
+        typeRecPoke = await pullType(type)
+        index = generateIndex(typeRecPoke.id,berry.id)
+        typeRec = userSimilarArtists[index]
+    }
 
+    let genRecPoke
+    let genRec
+    if(generation !== ''){
+        genRecPoke = await pullGeneration(generation)
+        index = generateIndex(genRecPoke.id, berry.id)
+        genRec = userSimilarArtists[index]
+    }
+
+    let colorRecPoke
+    let colorRec
+    if(color !== '') {
+        colorRecPoke = await pullColor(color)
+        index = generateIndex(colorRecPoke.id, berry.id)
+        colorRec = userSimilarArtists[index]
+    }
+
+
+    let finalReccomendations = [{
+        artist: primaryReccomendation,
+        pokemon:favoritePokemon,
+    }]
+
+    genRec && finalReccomendations.push({
+        artist: genRec,
+        pokemon: genRecPoke
+    })
+
+    typeRec && finalReccomendations.push({
+        artist: typeRec,
+        pokemon: typeRecPoke
+    })
+
+    colorRec && finalReccomendations.push({
+        artist:colorRec,
+        pokemon:colorRecPoke
+    })
+
+    displayResults(finalReccomendations)
+}
+
+// param 'results' is an array of objects of format:
+// {artist:artistName, pokemon:pokemonName}
+// results[0] is the primary reccomendation
+function displayResults(results) {
+    print(results)
 }
 
 function error(message){
