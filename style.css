@@ -10,6 +10,8 @@ h1{
     border-bottom: 1px solid black;
 }
 body{
+    color:var(--textColor);
+    background-color:var(--backgroundColor);
     margin:0
 }
 main{
@@ -108,4 +110,8 @@ select{
     to{
         transform:rotate(10deg)
     }
+}
+:root{
+    --backgroundColor:white;
+    --textColor:black;
 }

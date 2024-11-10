@@ -307,3 +307,11 @@ function error(message){
     errorMessageContainer.style.display = 'block'
     console.log("Error: "+message)
 }
+
+function toggleTheme(){
+    let root = document.documentElement
+    let currentBackground = getComputedStyle(root).getPropertyValue('--backgroundColor')
+    console.log(currentBackground)
+    root.style.setProperty("--backgroundColor",currentBackground == 'white'?'black':'white')
+    root.style.setProperty("--textColor",currentBackground == 'white'?'white':'black')
+}
