@@ -3,10 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Poke.FM</title>
+    <link rel="stylesheet" href="style.css">
     <script src="index.js" ></script>
 </head>
 <body>
+    <h1>Poke.FM</h1>
+    <main class="flex column">
+        <section id="controlPanel">
+            <section id="inputsContainer" class="flex column">
+                <div class="flex row spaceEven">
+                    <div class="flex column">
+                        <p class="center">I want music that is similar to...</p>
+                        <input id="artistSeachInput" type="text" placeholder="search for an artist">
+                    </div>
+                    <button id="submitArtistSearch" onclick="findSimilarArtist()">&hookrightarrow;</button>
+                </div>
+                
+                <div class="flex row spaceEven">
+                    <div class="flex column">
+                        <p class="center">...and my favorite Pokemon is</p>
+                        <input id="pokemonSearchInput" type="text" placeholder="search for a pokemon">
+                    </div>
+                    <button id="submitPokemonSearch" onclick="userPokemon()">&hookrightarrow;</button>
+                </div>
+                <div>
+                    <span>
+                        All this music reccomending is exhausting! Pick a berry to feed your favorite pokemon:&nbsp;
+                        <select id="berry" name="berry">
+                            <option value="">No Selection</option>
+                            <option value="cheri-berry">cheri-berry</option>
+                            <option value="chesto-berry">chesto-berry</option>
+                            <option value="pecha-berry">pecha-berry</option>
+                            <option value="rawst-berry">rawst-berry</option>
+                            <option value="aspear-berry">aspear-berry</option>
+                            <option value="leppa-berry">leppa-berry</option>
+                            <option value="oran-berry">oran-berry</option>
+                            <option value="persim-berry">persim-berry</option>
+                            <option value="lum-berry">lum-berry</option>
+                            <option value="sitrus-berry">sitrus-berry</option>
+                            <option value="figy-berry">figy-berry</option>
+                            <option value="wiki-berry">wiki-berry</option>
+                            <option value="mago-berry">mago-berry</option>
+                            <option value="aguav-berry">aguav-berry</option>
+                            <option value="iapapa-berry">iapapa-berry</option>
+                            <option value="razz-berry">razz-berry</option>
+                            <option value="bluk-berry">bluk-berry</option>
+                            <option value="nanab-berry">nanab-berry</option>
+                            <option value="wepear-berry">wepear-berry</option>
+                            <option value="pinap-berry">pinap-berry</option>
+                            <option value="pomeg-berry">pomeg-berry</option>
+                            <option value="kelpsy-berry">kelpsy-berry</option>
+                            <option value="qualot-berry">qualot-berry</option>
+                            <option value="hondew-berry">hondew-berry</option>
+                            <option value="grepa-berry">grepa-berry</option>
+                            <option value="tamato-berry">tamato-berry</option>
+                            <option value="cornn-berry">cornn-berry</option>
+                            <option value="magost-berry">magost-berry</option>
+                            <option value="rabuta-berry">rabuta-berry</option>
+                            <option value="nomel-berry">nomel-berry</option>
+                            <option value="spelon-berry">spelon-berry</option>
+                            <option value="pamtre-berry">pamtre-berry</option>
+                            <option value="watmel-berry">watmel-berry</option>
+                            <option value="durin-berry">durin-berry</option>
+                            <option value="belue-berry">belue-berry</option>
+                            <option value="occa-berry">occa-berry</option>
+                            <option value="passho-berry">passho-berry</option>
+                            <option value="wacan-berry">wacan-berry</option>
+                            <option value="rindo-berry">rindo-berry</option>
+                            <option value="yache-berry">yache-berry</option>
+                            <option value="chople-berry">chople-berry</option>
+                            <option value="kebia-berry">kebia-berry</option>
+                            <option value="shuca-berry">shuca-berry</option>
+                            <option value="coba-berry">coba-berry</option>
+                            <option value="payapa-berry">payapa-berry</option>
+                            <option value="tanga-berry">tanga-berry</option>
+                            <option value="charti-berry">charti-berry</option>
+                            <option value="kasib-berry">kasib-berry</option>
+                            <option value="haban-berry">haban-berry</option>
+                            <option value="colbur-berry">colbur-berry</option>
+                            <option value="babiri-berry">babiri-berry</option>
+                            <option value="chilan-berry">chilan-berry</option>
+                            <option value="liechi-berry">liechi-berry</option>
+                            <option value="ganlon-berry">ganlon-berry</option>
+                            <option value="salac-berry">salac-berry</option>
+                            <option value="petaya-berry">petaya-berry</option>
+                            <option value="apicot-berry">apicot-berry</option>
+                            <option value="lansat-berry">lansat-berry</option>
+                            <option value="starf-berry">starf-berry</option>
+                            <option value="enigma-berry">enigma-berry</option>
+                            <option value="micle-berry">micle-berry</option>
+                            <option value="custap-berry">custap-berry</option>
+                            <option value="jaboca-berry">jaboca-berry</option>
+                            <option value="rowap-berry">rowap-berry</option>
+                        </select>
+                    </span>
+                </div>
+                <div id="" class="flex column">
+                    <p>[Optional] Choose your favorites below for additional suggestions:</p>
+                    <span>
+                        Color:
+                        <select name="color">
+                            <option value="">No Selection</option>
+                            <option value="black">Black</option>
+                            <option value="blue">Blue</option>
+                            <option value="brown">Brown</option>
+                            <option value="gray">Gray</option>
+                            <option value="green">Green</option>
+                            <option value="pink">Pink</option>
+                            <option value="purple">Purple</option>
+                            <option value="red">Red</option>
+                            <option value="white">White</option>
+                            <option value="yellow">Yellow</option>
+                        </select>
+                    </span>
+                    <span>
+                        Type:
+                        <select name="type">
+                            <option value="">No Selection</option>
+                            <option value="normal">normal</option>
+                            <option value="fighting">fighting</option>
+                            <option value="flying">flying</option>
+                            <option value="poison">poison</option>
+                            <option value="ground">ground</option>
+                            <option value="rock">rock</option>
+                            <option value="bug">bug</option>
+                            <option value="ghost">ghost</option>
+                            <option value="steel">steel</option>
+                            <option value="fire">fire</option>
+                            <option value="water">water</option>
+                            <option value="grass">grass</option>
+                            <option value="electric">electric</option>
+                            <option value="psychic">psychic</option>
+                            <option value="ice">ice</option>
+                            <option value="dragon">dragon</option>
+                            <option value="dark">dark</option>
+                            <option value="fairy">fairy</option>
+                            <option value="stellar">stellar</option>
+                            <option value="unknown">unknown</option>
+                            <option value="shadow">shadow</option>
+                        </select>
+                    </span>
+                    
+                    <span>
+                        Generation:
+                        <select name="generation">
+                            <option value="">No Selection</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </span>
+                </div>
+                
+            </section>
+            <section id="generateReccomendationBtnContainer">
+                <button id="generateReccomendation">Get Reccomendation!</button>
+            </section>
+        </section>
+        <section id="reccomendationDisplay">
+
+        </section>
+        
+    </main>
+        
+
+
     
 </body>
 </html>

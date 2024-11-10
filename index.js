@@ -1,37 +1,43 @@
 const key="0d233a8d757fa7ab78f3a5605a7567af"
+let userPokemon
+let userSimilarArtists = []
 
 //returns map of 100 similar artists {name, mbid}
 async function findSimilarArtist(){
-    querry = document.getElementById("string_id").value
+    query = document.getElementById("artistSeachInput").value
     
     try{
         const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=${query}&autocorrect=1&api_key=${key}&format=json`)
         const SearchResults = await SearchRequest.json()
-        return SearchResults.similarartists.artist
+        userSimilarArtists = SearchResults.similarartists.artist
     }catch(error){
+        userSimilarArtists = []
         console.log(error)
     }
 }
+async function userPokemon() {
+    userPokemonSearch = document.getElementById('pokemonSearchInput').value
+    userPokemon = searchPokemon(userPokemonSearch)
+}
 //returns pokemon object
-async function userPokemon(query) {
+async function searchPokemon(query) {
     try{
         const SearchRequest = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`)
         const SearchResults = await SearchRequest.json()
         return SearchResults
     }catch(error){
-        console.log(error)
+        console.log(`Could not find results for your query: '${query}'`)
+        return undefined
     }
     
 }
 //takes list of pokemon, returns one pokemon object from list
 async function randomPokemonFromList(query){
-    userInput = document.getElementById("pokemonSearchInput").value
-    
     try{
         let random= Math.floor(Math.random()*2000)%query.length
         query=query[random].pokemon.name
         console.log(query)
-        return userPokemon(query)
+        return searchPokemon(query)
     }catch(error){
     console.log(error)
 }
@@ -44,7 +50,7 @@ async function pullType(query){
         const SearchResults = await SearchRequest.json()
         let random= Math.floor(Math.random()*2000)%SearchResults.pokemon.length
         pokemon=SearchResults.pokemon[random].pokemon.name
-        return userPokemon(pokemon)
+        return searchPokemon(pokemon)
     }catch(error){
         console.log(error)
     }
@@ -57,7 +63,7 @@ async function pullGeneration(query) {
         const SearchResults = await SearchRequest.json()
         let random= Math.floor(Math.random()*2000)%SearchResults.pokemon_species.length
         pokemon=SearchResults.pokemon_species[random].name
-        return userPokemon(pokemon)
+        return searchPokemon(pokemon)
     }catch(error){
         console.log(error)
     }
@@ -79,6 +85,9 @@ function generateIndex(first,second) {
     return index
 }
 
+async function generateReccomendations(){
+    const similarArtits = await findSimilarArtist()
+}
 
 async function main() {
     /*let obj= await findSimilarArtist("waterparks")
