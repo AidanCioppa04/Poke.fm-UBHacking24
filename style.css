@@ -1,13 +1,17 @@
 html{
     font-family: sans-serif;
 }
-
+#toggleTheme{
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+}
 h1{
     text-align: center;
     font-size: 2rem;
     padding:1rem;
     margin:0;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--textColor);
 }
 body{
     color:var(--textColor);
@@ -20,6 +24,10 @@ main{
 section{
     display: flex;
     flex-direction: column;
+}
+button{
+    background-color:var(--btnBacks);
+    color:var(--textColor)
 }
 .flex{
     display: flex;
@@ -37,9 +45,10 @@ input{
     padding: 0.5em;
     border: 1px solid transparent;
     border-radius: 100em;
-    background-color: rgb(220, 220, 220);
+    background-color: var(--btnBacks);
     text-align: center;
     font-size: 1.25em;
+    color: var(--textColor);
 }
 #inputsContainer{
     justify-content: space-evenly;
@@ -57,13 +66,15 @@ p.center{
     text-align: center;
 }
 select{
-    width:fit-content
+    width:fit-content;
+    background-color:var(--btnBacks);
+    color:var(--textColor)
 }
 #controlPanel{
     width: 32vw;
     padding: 0 1vw;
     height: calc(100vh - 4.4rem);
-    border-right: 1px solid black;
+    border-right: 1px solid var(--textColor);
 }
 #generateReccomendationBtnContainer{
     height: 20%;
@@ -114,4 +125,5 @@ select{
 :root{
     --backgroundColor:white;
     --textColor:black;
+    --btnBacks:rgb(200,200,200);
 }

@@ -314,4 +314,5 @@ function toggleTheme(){
     console.log(currentBackground)
     root.style.setProperty("--backgroundColor",currentBackground == 'white'?'black':'white')
     root.style.setProperty("--textColor",currentBackground == 'white'?'white':'black')
+    root.style.setProperty("--btnBacks",currentBackground == 'white'?'rgb(50,50,50)':'rgb(200,200,200)')
 }
