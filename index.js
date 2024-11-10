@@ -1,5 +1,5 @@
 const key="0d233a8d757fa7ab78f3a5605a7567af"
-let userPokemon
+let userPokemon1
 let userSimilarArtists = []
 
 //returns map of 100 similar artists {name, mbid}
@@ -10,14 +10,24 @@ async function findSimilarArtist(){
         const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=${query}&autocorrect=1&api_key=${key}&format=json`)
         const SearchResults = await SearchRequest.json()
         userSimilarArtists = SearchResults.similarartists.artist
+        console.log(userSimilarArtists)
     }catch(error){
         userSimilarArtists = []
         console.log(error)
     }
 }
+
+async function getArtistTags(query){
+    try{
+        const SearchRequest = await fetch(`https://ws.audioscrobbler.com/2.0/?method=artist.getTags&artist=${query}&api_key=${key}&format=json`)
+        const SearchResults = await SearchRequest.json()
+        let tags=SearchResults
+    }catch(error){console.log(error)}
+}
 async function userPokemon() {
     userPokemonSearch = document.getElementById('pokemonSearchInput').value
-    userPokemon = searchPokemon(userPokemonSearch)
+    userPokemon1 = await searchPokemon(userPokemonSearch)
+    console.log(userPokemon1)
 }
 //returns pokemon object
 async function searchPokemon(query) {
@@ -86,7 +96,36 @@ function generateIndex(first,second) {
 }
 
 async function generateReccomendations(){
-    const similarArtits = await findSimilarArtist()
+
+    userSimilarArtists = userSimilarArtists.length == 0 ? findSimilarArtist() : userSimilarArtists
+
+    if(userSimilarArtists.length == 0) {
+        return error("no valid artist")
+    }
+
+    userPokemon1 ??= userPokemon() 
+    if(!userPokemon1) {
+        return error("no valid pokemon selected")
+    }
+    
+    let berry = document.getElementById("berry").value
+    if(!berry){
+        return error("must pick a berry")
+    } 
+    berry = berry.slice(0,berry.indexOf('-'))
+    berry = await pullBerry(berry)
+    index = generateIndex(userPokemon1.id,berry.id)
+    
+    const primaryReccomendation = userSimilarArtists[index]
+    console.log(primaryReccomendation.name)
+
+    let tags = await getArtistTags(primaryReccomendation.name)
+    console.log(tags)
+
+}
+
+function error(message){
+    console.log(message)
 }
 
 async function main() {
