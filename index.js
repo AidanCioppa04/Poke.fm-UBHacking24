@@ -186,6 +186,7 @@ async function generateReccomendations(){
     index = generateIndex(favoritePokemon.id,berry.id)
     
     const primaryReccomendation = userSimilarArtists[index]
+    
 
     let primaryTags = await getArtistTags(primaryReccomendation.name)
     
@@ -235,6 +236,8 @@ async function generateReccomendations(){
     })
 
     displayResults(finalReccomendations)
+
+    
 }
 
 // param 'results' is an array of objects of format:
